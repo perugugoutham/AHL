@@ -14,6 +14,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     compileOptions {
@@ -59,5 +60,7 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxandroid:$rx_android"
 
     debugImplementation "com.readystatesoftware.chuck:library:$chuck"
+
+    implementation "com.jakewharton.rxrelay2:rxrelay:$rx_relay"
 
 }

@@ -10,6 +10,7 @@ buildscript {
         gson = "2.8.6"
         rx_android = "3.0.0"
         chuck = "1.1.0"
+        rx_relay = "2.1.1"
     }
 
     repositories {
