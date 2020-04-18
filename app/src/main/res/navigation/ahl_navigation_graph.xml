@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/ahl_navigation_graph"
+    app:startDestination="@id/AHLFragment">
+
+
+    <fragment
+        android:id="@+id/AHLFragment"
+        android:name="com.perugu.goutham.ahl.AHLFragment"
+        android:label="AHLFragment" />
+
+</navigation>
