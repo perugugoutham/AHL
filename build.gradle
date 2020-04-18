@@ -8,6 +8,8 @@ buildscript {
         okhttp = "4.5.0"
         bson = "3.8.2"
         gson = "2.8.6"
+        rx_android = "3.0.0"
+        chuck = "1.1.0"
     }
 
     repositories {

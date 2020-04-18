@@ -1,12 +1,14 @@
 package com.perugu.goutham.ahl
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import com.google.gson.Gson
+import com.readystatesoftware.chuck.ChuckInterceptor
 import okhttp3.OkHttpClient
 
-class AHLViewModel: ViewModel() {
+class AHLViewModel(application: Application): AndroidViewModel(application) {
 
-    var networkRequestRepo: NetworkRequestRepo = NetworkRequestRepo(OkHttpClient(), Gson())
+    var networkRequestRepo = NetworkRequestRepo(OkHttpClient.Builder().addInterceptor(ChuckInterceptor(application)).build(), Gson())
 
     fun fetchTournamentId(){
         networkRequestRepo.fetchTournamentId()

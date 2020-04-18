@@ -2,6 +2,8 @@ package com.perugu.goutham.ahl
 
 import com.google.gson.Gson
 import com.orhanobut.logger.Logger
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.*
 import org.bson.types.ObjectId
 import java.io.IOException
@@ -29,14 +31,7 @@ class NetworkRequestRepo(val okHttpClient: OkHttpClient, val gson: Gson) {
                     val tournamentData = gson.fromJson<TournamentData>(responseString, TournamentData::class.java)
                     Logger.wtf("TournamentId  ${tournamentData.id}")
 
-                    fetchFixtureData(tournamentData.id, Category.MEN)
-                    fetchFixtureData(tournamentData.id, Category.WOMEN)
-
-                    fetchPointsTableData(tournamentData.id, Category.MEN)
-                    fetchPointsTableData(tournamentData.id, Category.WOMEN)
-
-                    fetchTopScorers(tournamentData.id, Category.MEN)
-                    fetchTopScorers(tournamentData.id, Category.WOMEN)
+                    fetchOtherDataInMultipleThreads(tournamentData)
 
                 }else {
                     Logger.e("TournamentId response code ${response.code}}")
@@ -45,6 +40,27 @@ class NetworkRequestRepo(val okHttpClient: OkHttpClient, val gson: Gson) {
             }
 
         })
+    }
+
+    private fun fetchOtherDataInMultipleThreads(tournamentData: TournamentData) {
+        Flowable.just(NetworkRequests.values().toMutableList())
+            .flatMap {
+                Flowable.fromIterable(it)
+            }
+            .parallel()
+            .runOn(Schedulers.computation())
+            .map {
+                when(it!!){
+                    NetworkRequests.FIXTURE_FOR_WOMEN -> fetchFixtureData(tournamentData.id, Category.WOMEN)
+                    NetworkRequests.FIXTURE_FOR_MEN -> fetchFixtureData(tournamentData.id, Category.MEN)
+                    NetworkRequests.POINTS_TABLE_FOR_MEN -> fetchPointsTableData(tournamentData.id, Category.MEN)
+                    NetworkRequests.POINTS_TABLE_FOR_WOMEN -> fetchPointsTableData(tournamentData.id, Category.WOMEN)
+                    NetworkRequests.TOP_SCORER_FOR_MEN -> fetchTopScorers(tournamentData.id, Category.MEN)
+                    NetworkRequests.TOP_SCORER_FOR_WOMEN -> fetchTopScorers(tournamentData.id, Category.WOMEN)
+                }
+            }
+            .sequential()
+            .blockingLast()
     }
 
     private fun fetchFixtureData(id: ObjectId, category: Category) {
@@ -102,6 +118,18 @@ class NetworkRequestRepo(val okHttpClient: OkHttpClient, val gson: Gson) {
         }
     }
 
+}
+
+enum class NetworkRequests {
+
+    FIXTURE_FOR_MEN,
+    FIXTURE_FOR_WOMEN,
+
+    POINTS_TABLE_FOR_MEN,
+    POINTS_TABLE_FOR_WOMEN,
+
+    TOP_SCORER_FOR_MEN,
+    TOP_SCORER_FOR_WOMEN
 }
 
 enum class Category(val value: String){
