@@ -76,6 +76,12 @@ class NetworkRequestRepo(val okHttpClient: OkHttpClient, val gson: Gson) {
 
         if (response.isSuccessful){
             val fixtureData = gson.fromJson<FixtureData>(response.body?.string(), FixtureData::class.java)
+
+            //Todo this is temp until changes are made in API
+            fixtureData.forEach {
+                it.category = category
+            }
+
             Logger.wtf("Fixture data of ${category.value} is ${fixtureData[0]}")
         }else {
             Logger.e("Fixture data of ${category.value} fetch failed")
@@ -94,6 +100,11 @@ class NetworkRequestRepo(val okHttpClient: OkHttpClient, val gson: Gson) {
 
         if (response.isSuccessful){
             val pointsTableData = gson.fromJson<PointsTableData>(response.body?.string(), PointsTableData::class.java)
+
+            pointsTableData.forEach {
+                it.category = category
+            }
+
             Logger.wtf("PointsTable data of ${category.value} is ${pointsTableData[0]}")
         }else {
             Logger.e("PointsTable data of ${category.value} fetch failed")
@@ -112,6 +123,11 @@ class NetworkRequestRepo(val okHttpClient: OkHttpClient, val gson: Gson) {
 
         if (response.isSuccessful){
             val topScorersData = gson.fromJson<TopScorersData>(response.body?.string(), TopScorersData::class.java)
+
+            topScorersData.forEach {
+                it.category = category
+            }
+
             Logger.wtf("TopScorers data of ${category.value} is ${topScorersData[0]}")
         }else {
             Logger.e("TopScorers data of ${category.value} fetch failed")

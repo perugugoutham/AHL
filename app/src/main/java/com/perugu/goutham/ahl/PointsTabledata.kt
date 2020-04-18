@@ -12,6 +12,7 @@ data class PointsTableDataItem(
     val points: Int,
     val position: Int,
     val team: Team,
-    val won: Int
+    val won: Int,
+    var category: Category = Category.MEN
 )
 

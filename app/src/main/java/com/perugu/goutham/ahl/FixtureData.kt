@@ -15,7 +15,8 @@ data class FixtureDataItem(
     val team1Scorers: Map<String, Int>, //Map of player and number of goals by player
     val team2: Team,
     val team2Scorers: Map<String, Int>, //Map of player and number of goals by player
-    val tournamentId: ObjectId
+    val tournamentId: ObjectId,
+    var category: Category
 )
 
 data class Player(
