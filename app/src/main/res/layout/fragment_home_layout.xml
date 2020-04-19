@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
+    android:background="@color/shimmer_bg"
     android:orientation="vertical"
     android:scrollbars="none">
 
@@ -22,9 +22,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <include layout="@layout/previous_match_layout_loader"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:id="@+id/previous_match_data"
+                android:visibility="gone"
                 android:padding="10dp">
 
                 <TextView
@@ -193,8 +201,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/previous_match_card">
 
+            <include layout="@layout/points_table_shimmer_loader"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
+                android:visibility="gone"
+                android:id="@+id/points_table_data"
                 android:layout_height="match_parent">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -224,8 +240,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/points_table_card">
 
+            <include layout="@layout/top_scorer_shimmer_layout"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
+                android:id="@+id/top_scorers_data"
+                android:visibility="gone"
                 android:layout_height="match_parent">
 
                 <androidx.recyclerview.widget.RecyclerView

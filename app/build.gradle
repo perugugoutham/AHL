@@ -63,4 +63,7 @@ dependencies {
 
     implementation "com.jakewharton.rxrelay2:rxrelay:$rx_relay"
 
+    implementation "com.facebook.shimmer:shimmer:$shimmer"
+
+
 }

@@ -13,6 +13,10 @@ class AHLViewModel(application: Application): AndroidViewModel(application) {
 
     private var networkRequestRepo = NetworkRequestRepo(OkHttpClient.Builder().addInterceptor(ChuckInterceptor(application)).build(), Gson())
 
+    init {
+        fetchTournamentId()
+    }
+
     fun fetchTournamentId(){
         networkRequestRepo.fetchTournamentId(ahlDataStateStream)
     }

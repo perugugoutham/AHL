@@ -14,6 +14,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_home_layout.*
+import kotlinx.android.synthetic.main.points_table_shimmer_loader.*
+import kotlinx.android.synthetic.main.previous_match_layout_loader.*
+import kotlinx.android.synthetic.main.top_scorer_shimmer_layout.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.Executor
@@ -23,14 +27,9 @@ abstract class BaseHomeFragment : Fragment() {
 
     private val ahlViewModel by viewModels<AHLViewModel>()
 
-    lateinit var compositeDisposable: CompositeDisposable
+    private lateinit var compositeDisposable: CompositeDisposable
 
     val oldState: AHLDataState = AHLDataState()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        ahlViewModel.fetchTournamentId()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,7 +70,7 @@ abstract class BaseHomeFragment : Fragment() {
         }
 
         val date = Date(previousMatchFixtureData!!.matchDateTime)
-        val simpleDateFormat = SimpleDateFormat("dd.MMM.yyyy HH:mm a", Locale.US)
+        val simpleDateFormat = SimpleDateFormat("dd MMM yyyy - hh:mm a", Locale.US)
 
         requireView().findViewById<TextView>(R.id.pervious_match_date).text =
             simpleDateFormat.format(date)
@@ -101,6 +100,9 @@ abstract class BaseHomeFragment : Fragment() {
                 previousMatchFixtureData.team2.teamTag
             )
         )
+
+        previous_match_shimmer.visibility = View.GONE
+        previous_match_data.visibility = View.VISIBLE
     }
 
     fun renderPointsTable(pointsTableData: PointsTableData) {
@@ -108,6 +110,9 @@ abstract class BaseHomeFragment : Fragment() {
         pointsTableAdapter.updatePointsTabledata(pointsTableData)
         requireView().findViewById<RecyclerView>(R.id.points_table_recycler_view).adapter =
             pointsTableAdapter
+
+        points_table_shimmer.visibility = View.GONE
+        points_table_data.visibility = View.VISIBLE
     }
 
     fun renderTopScorersData(topScorersDataMen: TopScorersData) {
@@ -124,6 +129,9 @@ abstract class BaseHomeFragment : Fragment() {
         )
 
         recyclerView.adapter = topScorersAdapter
+
+        top_scorer_shimmer.visibility = View.GONE
+        top_scorers_data.visibility = View.VISIBLE
     }
 }
 

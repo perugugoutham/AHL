@@ -11,6 +11,7 @@ buildscript {
         rx_android = "3.0.0"
         chuck = "1.1.0"
         rx_relay = "2.1.1"
+        shimmer = "0.5.0"
     }
 
     repositories {
