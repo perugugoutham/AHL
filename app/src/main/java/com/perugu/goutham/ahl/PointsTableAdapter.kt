@@ -1,5 +1,6 @@
 package com.perugu.goutham.ahl
 
+import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,29 +25,42 @@ class PointsTableAdapter : RecyclerView.Adapter<PointsTableAdapter.PointsTableHo
     }
 
     override fun onBindViewHolder(holder: PointsTableHolder, position: Int) {
-        if (pointsTableData != null){
-            val pointsTableDataItem = pointsTableData!![position]
-            holder.position.text = pointsTableDataItem.position.toString()
+        if (position == 0){
+            holder.position.visibility = View.INVISIBLE
+            holder.teamLogo.visibility = View.INVISIBLE
+            holder.teamName.visibility = View.INVISIBLE
+            holder.played.text = "P"
+            holder.won.text = "W"
+            holder.lost.text = "L"
+            holder.draw.text = "D"
+            holder.goalDifference.text = "GD"
+            holder.points.text = "PT"
+        }else {
+            if (pointsTableData != null){
+                val pointsTableDataItem = pointsTableData!![position - 1]
+                holder.position.text = pointsTableDataItem.position.toString()
 
-            val teamName = pointsTableDataItem.team.name
-            val name = teamName
-                .split(' ')
-                .mapNotNull {
-                    it.firstOrNull()?.toString()
-                }
-                .reduce { first, second ->
-                    first.toUpperCase(Locale.US) + second.toUpperCase(Locale.US)
-                }.take(2)
+                val teamName = pointsTableDataItem.team.name
+                val name = teamName
+                    .split(' ')
+                    .mapNotNull {
+                        it.firstOrNull()?.toString()
+                    }
+                    .reduce { first, second ->
+                        first.toUpperCase(Locale.US) + second.toUpperCase(Locale.US)
+                    }.take(2)
 
-            holder.teamName.text = name
-            holder.played.text = pointsTableDataItem.matchesPlayed.toString()
-            holder.won.text = pointsTableDataItem.won.toString()
-            holder.lost.text = pointsTableDataItem.lost.toString()
-            holder.draw.text = pointsTableDataItem.draw.toString()
-            holder.goalDifference.text = pointsTableDataItem.goalDifference.toString()
-            holder.points.text = pointsTableDataItem.points.toString()
-            holder.teamLogo.setImageResource(getTeamLogo(pointsTableDataItem.team.teamTag))
+                holder.teamName.text = name
+                holder.played.text = pointsTableDataItem.matchesPlayed.toString()
+                holder.won.text = pointsTableDataItem.won.toString()
+                holder.lost.text = pointsTableDataItem.lost.toString()
+                holder.draw.text = pointsTableDataItem.draw.toString()
+                holder.goalDifference.text = pointsTableDataItem.goalDifference.toString()
+                holder.points.text = pointsTableDataItem.points.toString()
+                holder.teamLogo.setImageResource(getTeamLogo(pointsTableDataItem.team.teamTag))
+            }
         }
+
     }
 
     fun updatePointsTabledata(pointsTableDataMen: PointsTableData) {
