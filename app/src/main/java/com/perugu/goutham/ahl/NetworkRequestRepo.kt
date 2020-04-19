@@ -120,7 +120,12 @@ class NetworkRequestRepo(
                 it.category = category
             }
 
-            val ahlDataState = ahlDataStateStream.value!!.copy(fixtureData = fixtureData)
+            val ahlDataState: AHLDataState
+            if (category == Category.MEN){
+                ahlDataState = ahlDataStateStream.value!!.copy(fixtureDataMen = fixtureData)
+            }else {
+                ahlDataState = ahlDataStateStream.value!!.copy(fixtureDataWomen = fixtureData)
+            }
             ahlDataStateStream.accept(ahlDataState)
 
         }else {
@@ -149,7 +154,12 @@ class NetworkRequestRepo(
                 it.category = category
             }
 
-            val ahlDataState = ahlDataStateStream.value!!.copy(pointsTableData = pointsTableData)
+            val ahlDataState: AHLDataState
+            if (category == Category.MEN){
+                ahlDataState = ahlDataStateStream.value!!.copy(pointsTableDataMen = pointsTableData)
+            }else {
+                ahlDataState = ahlDataStateStream.value!!.copy(pointsTableDataWomen = pointsTableData)
+            }
             ahlDataStateStream.accept(ahlDataState)
 
         }else {
@@ -178,7 +188,12 @@ class NetworkRequestRepo(
                 it.category = category
             }
 
-            val ahlDataState = ahlDataStateStream.value!!.copy(topScorersData = topScorersData)
+            val ahlDataState: AHLDataState
+            if (category == Category.MEN){
+                ahlDataState = ahlDataStateStream.value!!.copy(topScorersDataMen = topScorersData)
+            }else {
+                ahlDataState = ahlDataStateStream.value!!.copy(topScorersDataWomen = topScorersData)
+            }
             ahlDataStateStream.accept(ahlDataState)
 
         }else {

@@ -20,7 +20,14 @@ class AHLViewModel(application: Application): AndroidViewModel(application) {
 }
 
 data class AHLDataState(
-    val fixtureData: FixtureData = FixtureData(),
-    val pointsTableData: PointsTableData = PointsTableData(),
-    val topScorersData: TopScorersData = TopScorersData()
+    //Maintaining men and women data separately is temp until server changes are done
+
+    val fixtureDataMen: FixtureData = FixtureData(),
+    val fixtureDataWomen: FixtureData = FixtureData(),
+
+    val pointsTableDataMen: PointsTableData = PointsTableData(),
+    val pointsTableDataWomen: PointsTableData = PointsTableData(),
+
+    val topScorersDataMen: TopScorersData = TopScorersData(),
+    val topScorersDataWomen: TopScorersData = TopScorersData()
 )

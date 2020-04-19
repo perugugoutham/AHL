@@ -10,9 +10,9 @@
         android:label="@string/app_name"
         android:name=".AHLApplication"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".AHLActivty">
+        android:supportsRtl="true">
+        <activity android:name=".AHLActivty"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
