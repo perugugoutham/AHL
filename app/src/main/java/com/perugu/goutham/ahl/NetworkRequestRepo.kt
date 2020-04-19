@@ -1,7 +1,6 @@
 package com.perugu.goutham.ahl
 
 import com.google.gson.Gson
-import com.jakewharton.rxrelay2.BehaviorRelay
 import com.orhanobut.logger.Logger
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -10,13 +9,13 @@ import org.bson.types.ObjectId
 import java.io.IOException
 
 class NetworkRequestRepo(
-    val okHttpClient: OkHttpClient,
+    private val okHttpClient: OkHttpClient,
     val gson: Gson
 ) {
 
     private val baseUrl = "https://young-coast-02878.herokuapp.com/api"
 
-    fun fetchTournamentId(ahlDataStateStream: BehaviorRelay<AHLDataState>) {
+    fun fetchTournamentId(callBackStreams: CallBackStreams) {
         val url = "${baseUrl}/tournament?season=2020&type=AHL"
 
         Logger.d("Tournament data fetch")
@@ -35,10 +34,11 @@ class NetworkRequestRepo(
                     val tournamentData = gson.fromJson<TournamentData>(responseString, TournamentData::class.java)
                     Logger.wtf("TournamentId  ${tournamentData.id}")
 
-                    fetchOtherDataInMultipleThreads(tournamentData, ahlDataStateStream)
+                    fetchOtherDataInMultipleThreads(tournamentData, callBackStreams)
 
                 }else {
                     Logger.e("TournamentId response code ${response.code}}")
+                    callBackStreams.errorState.accept(NETWORK_REQUEST_FAILED("TournamentId response code ${response.code}}"))
                 }
 
             }
@@ -48,9 +48,11 @@ class NetworkRequestRepo(
 
     private fun fetchOtherDataInMultipleThreads(
         tournamentData: TournamentData,
-        ahlDataStateStream: BehaviorRelay<AHLDataState>
+        callBackStreams: CallBackStreams
     ) {
-        Flowable.just(NetworkRequests.values().toMutableList())
+        val list = NetworkRequests.values().toMutableList()
+        list.reverse()
+        Flowable.just(list)
             .flatMap {
                 Flowable.fromIterable(it)
             }
@@ -61,35 +63,35 @@ class NetworkRequestRepo(
                     NetworkRequests.FIXTURE_FOR_WOMEN -> fetchFixtureData(
                         tournamentData.id,
                         Category.WOMEN,
-                        ahlDataStateStream
+                        callBackStreams
                     )
 
                     NetworkRequests.FIXTURE_FOR_MEN -> fetchFixtureData(
                         tournamentData.id,
                         Category.MEN,
-                        ahlDataStateStream
+                        callBackStreams
                     )
 
                     NetworkRequests.POINTS_TABLE_FOR_MEN -> fetchPointsTableData(
                         tournamentData.id,
                         Category.MEN,
-                        ahlDataStateStream
+                        callBackStreams
                     )
                     NetworkRequests.POINTS_TABLE_FOR_WOMEN -> fetchPointsTableData(
                         tournamentData.id,
                         Category.WOMEN,
-                        ahlDataStateStream
+                        callBackStreams
                     )
 
                     NetworkRequests.TOP_SCORER_FOR_MEN -> fetchTopScorers(
                         tournamentData.id,
                         Category.MEN,
-                        ahlDataStateStream
+                        callBackStreams
                     )
                     NetworkRequests.TOP_SCORER_FOR_WOMEN -> fetchTopScorers(
                         tournamentData.id,
                         Category.WOMEN,
-                        ahlDataStateStream
+                        callBackStreams
                     )
                 }
             }
@@ -100,7 +102,7 @@ class NetworkRequestRepo(
     private fun fetchFixtureData(
         id: ObjectId,
         category: Category,
-        ahlDataStateStream: BehaviorRelay<AHLDataState>
+        callBackStreams: CallBackStreams
     ) {
 
         Logger.d("Fixture data fetch ${category.value}")
@@ -122,21 +124,22 @@ class NetworkRequestRepo(
 
             val ahlDataState: AHLDataState
             if (category == Category.MEN){
-                ahlDataState = ahlDataStateStream.value!!.copy(fixtureDataMen = fixtureData)
+                ahlDataState = callBackStreams.ahlDataStateStream.value!!.copy(fixtureDataMen = fixtureData)
             }else {
-                ahlDataState = ahlDataStateStream.value!!.copy(fixtureDataWomen = fixtureData)
+                ahlDataState = callBackStreams.ahlDataStateStream.value!!.copy(fixtureDataWomen = fixtureData)
             }
-            ahlDataStateStream.accept(ahlDataState)
+            callBackStreams.ahlDataStateStream.accept(ahlDataState)
 
         }else {
             Logger.e("Fixture data of ${category.value} fetch failed")
+            callBackStreams.errorState.accept(NETWORK_REQUEST_FAILED("Fixture data of ${category.value} fetch failed"))
         }
     }
 
     private fun fetchPointsTableData(
         id: ObjectId,
         category: Category,
-        ahlDataStateStream: BehaviorRelay<AHLDataState>
+        callBackStreams: CallBackStreams
     ) {
         val url = "$baseUrl/points?category=${category.value}&tournament=$id"
 
@@ -156,21 +159,22 @@ class NetworkRequestRepo(
 
             val ahlDataState: AHLDataState
             if (category == Category.MEN){
-                ahlDataState = ahlDataStateStream.value!!.copy(pointsTableDataMen = pointsTableData)
+                ahlDataState = callBackStreams.ahlDataStateStream.value!!.copy(pointsTableDataMen = pointsTableData)
             }else {
-                ahlDataState = ahlDataStateStream.value!!.copy(pointsTableDataWomen = pointsTableData)
+                ahlDataState = callBackStreams.ahlDataStateStream.value!!.copy(pointsTableDataWomen = pointsTableData)
             }
-            ahlDataStateStream.accept(ahlDataState)
+            callBackStreams.ahlDataStateStream.accept(ahlDataState)
 
         }else {
             Logger.e("PointsTable data of ${category.value} fetch failed")
+            callBackStreams.errorState.accept(NETWORK_REQUEST_FAILED("PointsTable data of ${category.value} fetch failed"))
         }
     }
 
     private fun fetchTopScorers(
         id: ObjectId,
         category: Category,
-        ahlDataStateStream: BehaviorRelay<AHLDataState>
+        callBackStreams: CallBackStreams
     ){
         val url = "$baseUrl/topscorers/$id?category=${category.value}&count=3"
 
@@ -190,14 +194,15 @@ class NetworkRequestRepo(
 
             val ahlDataState: AHLDataState
             if (category == Category.MEN){
-                ahlDataState = ahlDataStateStream.value!!.copy(topScorersDataMen = topScorersData)
+                ahlDataState = callBackStreams.ahlDataStateStream.value!!.copy(topScorersDataMen = topScorersData)
             }else {
-                ahlDataState = ahlDataStateStream.value!!.copy(topScorersDataWomen = topScorersData)
+                ahlDataState = callBackStreams.ahlDataStateStream.value!!.copy(topScorersDataWomen = topScorersData)
             }
-            ahlDataStateStream.accept(ahlDataState)
+            callBackStreams.ahlDataStateStream.accept(ahlDataState)
 
         }else {
             Logger.e("TopScorers data of ${category.value} fetch failed")
+            callBackStreams.errorState.accept(NETWORK_REQUEST_FAILED("TopScorers data of ${category.value} fetch failed"))
         }
     }
 

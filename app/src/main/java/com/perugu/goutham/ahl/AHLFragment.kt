@@ -7,11 +7,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.viewModels
 import androidx.viewpager.widget.PagerAdapter
+import com.orhanobut.logger.Logger
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_ahl_layout.*
 
 class AHLFragment: Fragment() {
 
+    private val ahlViewModel by viewModels<AHLViewModel>()
+
+    lateinit var compositeDisposable: CompositeDisposable
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,6 +29,10 @@ class AHLFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        compositeDisposable = CompositeDisposable()
+        compositeDisposable.add(ahlViewModel.uistateStream.subscribe(this::setUiAlert))
+
         ahl_tab_layout.setupWithViewPager(ahl_view_pager)
         val ahlTabAdapter = AhlTabAdapter(parentFragmentManager)
 
@@ -34,6 +44,16 @@ class AHLFragment: Fragment() {
 
         ahl_view_pager.adapter = ahlTabAdapter
 
+    }
+
+    private fun setUiAlert(uiState: UIState){
+        when(uiState){
+            NETWORK_NOT_AVAILABLE -> TODO()
+            NETWORK_AVAILABLE -> TODO()
+            is NETWORK_REQUEST_FAILED -> {
+               Logger.wtf(uiState.value)
+            }
+        }
     }
 
     inner class AhlTabAdapter internal constructor(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT){
