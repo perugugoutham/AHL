@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_margin="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="1"
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:id="@+id/position"
+        android:gravity="center"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/team_logo"/>
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:id="@+id/team_logo"
+        tools:src="@drawable/bluz"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@id/position"
+        app:layout_constraintTop_toTopOf="@id/position"
+        app:layout_constraintBottom_toBottomOf="@id/position"
+        app:layout_constraintEnd_toStartOf="@id/team_name"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="RR"
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:id="@+id/team_name"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@id/team_logo"
+        app:layout_constraintTop_toTopOf="@id/team_logo"
+        app:layout_constraintBottom_toBottomOf="@id/team_logo"
+        app:layout_constraintEnd_toStartOf="@id/played"/>
+
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="21"
+        android:id="@+id/played"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@id/team_name"
+        app:layout_constraintTop_toTopOf="@id/team_name"
+        app:layout_constraintBottom_toBottomOf="@id/team_name"
+        app:layout_constraintEnd_toStartOf="@id/won"/>
+
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="15"
+        android:id="@+id/won"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@id/played"
+        app:layout_constraintTop_toTopOf="@id/played"
+        app:layout_constraintBottom_toBottomOf="@id/played"
+        app:layout_constraintEnd_toStartOf="@id/lost"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="3"
+        android:id="@+id/lost"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@id/won"
+        app:layout_constraintTop_toTopOf="@id/won"
+        app:layout_constraintBottom_toBottomOf="@id/won"
+        app:layout_constraintEnd_toStartOf="@id/draw"/>
+
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="3"
+        android:id="@+id/draw"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@id/lost"
+        app:layout_constraintTop_toTopOf="@id/lost"
+        app:layout_constraintBottom_toBottomOf="@id/lost"
+        app:layout_constraintEnd_toStartOf="@id/goal_difference"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="15"
+        android:id="@+id/goal_difference"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@id/draw"
+        app:layout_constraintTop_toTopOf="@id/draw"
+        app:layout_constraintBottom_toBottomOf="@id/draw"
+        app:layout_constraintEnd_toStartOf="@id/points"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="78"
+        android:id="@+id/points"
+        android:gravity="center"
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        app:layout_constraintStart_toEndOf="@id/goal_difference"
+        app:layout_constraintTop_toTopOf="@id/goal_difference"
+        app:layout_constraintBottom_toBottomOf="@id/goal_difference"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
