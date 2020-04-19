@@ -15,6 +15,12 @@ class WomenHomeFragment: BaseHomeFragment() {
         if (oldState.pointsTableDataMen != pointsTableDataWomen){
             renderPointsTable(pointsTableDataWomen)
         }
+
+        val topScorersDataWomen = newState.topScorersDataWomen
+
+        if (oldState.topScorersDataWomen != topScorersDataWomen){
+            renderTopScorersData(topScorersDataWomen)
+        }
     }
 
 

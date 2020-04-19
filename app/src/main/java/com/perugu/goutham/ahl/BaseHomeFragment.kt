@@ -2,20 +2,21 @@ package com.perugu.goutham.ahl
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.Executor
-import android.os.Looper
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.Executor
 
 
 abstract class BaseHomeFragment : Fragment() {
@@ -107,6 +108,22 @@ abstract class BaseHomeFragment : Fragment() {
         pointsTableAdapter.updatePointsTabledata(pointsTableData)
         requireView().findViewById<RecyclerView>(R.id.points_table_recycler_view).adapter =
             pointsTableAdapter
+    }
+
+    fun renderTopScorersData(topScorersDataMen: TopScorersData) {
+        val topScorersAdapter = TopScorersAdapter()
+        topScorersAdapter.updateTopScorersData(topScorersDataMen)
+
+        val recyclerView = requireView().findViewById<RecyclerView>(R.id.top_scorers_recycler_view)
+
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                recyclerView.getContext(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
+
+        recyclerView.adapter = topScorersAdapter
     }
 }
 

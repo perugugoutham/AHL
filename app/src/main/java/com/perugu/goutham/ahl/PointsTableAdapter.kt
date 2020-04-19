@@ -21,7 +21,7 @@ class PointsTableAdapter : RecyclerView.Adapter<PointsTableAdapter.PointsTableHo
     }
 
     override fun getItemCount(): Int {
-        return if (pointsTableData != null ) pointsTableData!!.count() else 7
+        return if (pointsTableData != null ) pointsTableData!!.count() + 1 else 7
     }
 
     override fun onBindViewHolder(holder: PointsTableHolder, position: Int) {
