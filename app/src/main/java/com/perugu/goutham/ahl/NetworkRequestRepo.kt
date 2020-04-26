@@ -1,21 +1,22 @@
 package com.perugu.goutham.ahl
 
 import com.google.gson.Gson
+import com.jakewharton.rxrelay2.PublishRelay
 import com.orhanobut.logger.Logger
-import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.*
 import org.bson.types.ObjectId
 import java.io.IOException
 
 class NetworkRequestRepo(
     private val okHttpClient: OkHttpClient,
-    val gson: Gson
+    val gson: Gson,
+    val networkRequestStateStream: PublishRelay<NetworkRequestState>
 ) {
 
     private val baseUrl = "https://young-coast-02878.herokuapp.com/api"
 
-    fun fetchTournamentId(callBackStreams: CallBackStreams) {
+    fun fetchTournamentId() {
+        networkRequestStateStream.accept(Loading(NetworkRequestAction.TOURNAMENT_ID))
         val url = "${baseUrl}/tournament?season=2020&type=AHL"
 
         Logger.d("Tournament data fetch")
@@ -34,11 +35,11 @@ class NetworkRequestRepo(
                     val tournamentData = gson.fromJson<TournamentData>(responseString, TournamentData::class.java)
                     Logger.wtf("TournamentId  ${tournamentData.id}")
 
-                    fetchOtherDataInMultipleThreads(tournamentData, callBackStreams)
+                    networkRequestStateStream.accept(Success(tournamentData))
 
                 }else {
                     Logger.e("TournamentId response code ${response.code}}")
-                    callBackStreams.errorState.accept(NETWORK_REQUEST_FAILED("TournamentId response code ${response.code}}"))
+                    networkRequestStateStream.accept(Failed(NetworkRequestAction.TOURNAMENT_ID, response.code))
                 }
 
             }
@@ -46,66 +47,18 @@ class NetworkRequestRepo(
         })
     }
 
-    private fun fetchOtherDataInMultipleThreads(
-        tournamentData: TournamentData,
-        callBackStreams: CallBackStreams
-    ) {
-        val list = NetworkRequests.values().toMutableList()
-        list.reverse()
-        Flowable.just(list)
-            .flatMap {
-                Flowable.fromIterable(it)
-            }
-            .parallel()
-            .runOn(Schedulers.computation())
-            .map {
-                when(it!!){
-                    NetworkRequests.FIXTURE_FOR_WOMEN -> fetchFixtureData(
-                        tournamentData.id,
-                        Category.WOMEN,
-                        callBackStreams
-                    )
-
-                    NetworkRequests.FIXTURE_FOR_MEN -> fetchFixtureData(
-                        tournamentData.id,
-                        Category.MEN,
-                        callBackStreams
-                    )
-
-                    NetworkRequests.POINTS_TABLE_FOR_MEN -> fetchPointsTableData(
-                        tournamentData.id,
-                        Category.MEN,
-                        callBackStreams
-                    )
-                    NetworkRequests.POINTS_TABLE_FOR_WOMEN -> fetchPointsTableData(
-                        tournamentData.id,
-                        Category.WOMEN,
-                        callBackStreams
-                    )
-
-                    NetworkRequests.TOP_SCORER_FOR_MEN -> fetchTopScorers(
-                        tournamentData.id,
-                        Category.MEN,
-                        callBackStreams
-                    )
-                    NetworkRequests.TOP_SCORER_FOR_WOMEN -> fetchTopScorers(
-                        tournamentData.id,
-                        Category.WOMEN,
-                        callBackStreams
-                    )
-                }
-            }
-            .sequential()
-            .blockingLast()
-    }
-
-    private fun fetchFixtureData(
+    fun fetchFixtureData(
         id: ObjectId,
-        category: Category,
-        callBackStreams: CallBackStreams
+        category: Category
     ) {
 
         Logger.d("Fixture data fetch ${category.value}")
+
+        if (category == Category.MEN){
+            networkRequestStateStream.accept(Loading(NetworkRequestAction.FIXTURE_FOR_MEN))
+        }else{
+            networkRequestStateStream.accept(Loading(NetworkRequestAction.FIXTURE_FOR_WOMEN))
+        }
 
         val url = "$baseUrl/matches?category=${category.value}&tournament=$id"
 
@@ -122,28 +75,31 @@ class NetworkRequestRepo(
                 it.category = category
             }
 
-            val ahlDataState: AHLDataState
-            if (category == Category.MEN){
-                ahlDataState = callBackStreams.ahlDataStateStream.value!!.copy(fixtureDataMen = fixtureData)
-            }else {
-                ahlDataState = callBackStreams.ahlDataStateStream.value!!.copy(fixtureDataWomen = fixtureData)
-            }
-            callBackStreams.ahlDataStateStream.accept(ahlDataState)
+            networkRequestStateStream.accept(Success(fixtureData))
 
         }else {
             Logger.e("Fixture data of ${category.value} fetch failed")
-            callBackStreams.errorState.accept(NETWORK_REQUEST_FAILED("Fixture data of ${category.value} fetch failed"))
+            if (category == Category.MEN){
+                networkRequestStateStream.accept(Failed(NetworkRequestAction.FIXTURE_FOR_MEN, response.code))
+            }else{
+                networkRequestStateStream.accept(Failed(NetworkRequestAction.FIXTURE_FOR_WOMEN, response.code))
+            }
         }
     }
 
-    private fun fetchPointsTableData(
+    fun fetchPointsTableData(
         id: ObjectId,
-        category: Category,
-        callBackStreams: CallBackStreams
+        category: Category
     ) {
         val url = "$baseUrl/points?category=${category.value}&tournament=$id"
 
         Logger.d("PointsTable data fetch ${category.value}")
+
+        if (category == Category.MEN){
+            networkRequestStateStream.accept(Loading(NetworkRequestAction.POINTS_TABLE_FOR_MEN))
+        }else{
+            networkRequestStateStream.accept(Loading(NetworkRequestAction.POINTS_TABLE_FOR_WOMEN))
+        }
 
         val requestBuilder = Request.Builder()
         requestBuilder.url(url)
@@ -157,28 +113,31 @@ class NetworkRequestRepo(
                 it.category = category
             }
 
-            val ahlDataState: AHLDataState
-            if (category == Category.MEN){
-                ahlDataState = callBackStreams.ahlDataStateStream.value!!.copy(pointsTableDataMen = pointsTableData)
-            }else {
-                ahlDataState = callBackStreams.ahlDataStateStream.value!!.copy(pointsTableDataWomen = pointsTableData)
-            }
-            callBackStreams.ahlDataStateStream.accept(ahlDataState)
+            networkRequestStateStream.accept(Success(pointsTableData))
 
         }else {
             Logger.e("PointsTable data of ${category.value} fetch failed")
-            callBackStreams.errorState.accept(NETWORK_REQUEST_FAILED("PointsTable data of ${category.value} fetch failed"))
+            if (category == Category.MEN){
+                networkRequestStateStream.accept(Failed(NetworkRequestAction.POINTS_TABLE_FOR_MEN, response.code))
+            }else{
+                networkRequestStateStream.accept(Failed(NetworkRequestAction.POINTS_TABLE_FOR_WOMEN, response.code))
+            }
         }
     }
 
-    private fun fetchTopScorers(
+    fun fetchTopScorers(
         id: ObjectId,
-        category: Category,
-        callBackStreams: CallBackStreams
+        category: Category
     ){
         val url = "$baseUrl/topscorers/$id?category=${category.value}&count=3"
 
         Logger.d("TopScorers data fetch ${category.value}")
+
+        if (category == Category.MEN){
+            networkRequestStateStream.accept(Loading(NetworkRequestAction.TOP_SCORER_FOR_MEN))
+        }else{
+            networkRequestStateStream.accept(Loading(NetworkRequestAction.TOP_SCORER_FOR_WOMEN))
+        }
 
         val requestBuilder = Request.Builder()
         requestBuilder.url(url)
@@ -192,35 +151,22 @@ class NetworkRequestRepo(
                 it.category = category
             }
 
-            val ahlDataState: AHLDataState
-            if (category == Category.MEN){
-                ahlDataState = callBackStreams.ahlDataStateStream.value!!.copy(topScorersDataMen = topScorersData)
-            }else {
-                ahlDataState = callBackStreams.ahlDataStateStream.value!!.copy(topScorersDataWomen = topScorersData)
-            }
-            callBackStreams.ahlDataStateStream.accept(ahlDataState)
+            networkRequestStateStream.accept(Success(topScorersData))
 
         }else {
             Logger.e("TopScorers data of ${category.value} fetch failed")
-            callBackStreams.errorState.accept(NETWORK_REQUEST_FAILED("TopScorers data of ${category.value} fetch failed"))
+            if (category == Category.MEN){
+                networkRequestStateStream.accept(Failed(NetworkRequestAction.TOP_SCORER_FOR_MEN, response.code))
+            }else {
+                networkRequestStateStream.accept(Failed(NetworkRequestAction.TOP_SCORER_FOR_WOMEN, response.code))
+            }
         }
     }
 
 }
 
-enum class NetworkRequests {
-
-    FIXTURE_FOR_MEN,
-    FIXTURE_FOR_WOMEN,
-
-    POINTS_TABLE_FOR_MEN,
-    POINTS_TABLE_FOR_WOMEN,
-
-    TOP_SCORER_FOR_MEN,
-    TOP_SCORER_FOR_WOMEN
-}
-
 enum class Category(val value: String){
+    DEFAULT("DEFAULT"),
     MEN ("men"),
     WOMEN("women")
 }
