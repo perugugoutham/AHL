@@ -5,34 +5,35 @@ import org.bson.types.ObjectId
 class FixtureData : ArrayList<FixtureDataItem>()
 
 data class FixtureDataItem(
-    val buddingPlayer: Player,
-    val id: ObjectId,
-    val matchDateTime: Long,
-    val mom: Player,
-    val result: Int,
-    val status: Status,
-    val team1: Team,
-    val team1Scorers: Map<String, Int>, //Map of player and number of goals by player
-    val team2: Team,
-    val team2Scorers: Map<String, Int>, //Map of player and number of goals by player
-    val tournamentId: ObjectId,
-    var category: Category
+    val buddingPlayer: Player = Player(),
+    val id: ObjectId = ObjectId(),
+    val matchDateTime: Long = 0L,
+    val mom: Player = Player(),
+    val result: Int = 0,
+    val status: Status = Status.DEFAULT,
+    val team1: Team = Team(),
+    val team1Scorers: Map<String, Int> = mapOf(), //Map of player and number of goals by player
+    val team2: Team = Team(),
+    val team2Scorers: Map<String, Int> = mapOf(), //Map of player and number of goals by player
+    val tournamentId: ObjectId = ObjectId(),
+    var category: Category = Category.MEN
 )
 
 data class Player(
-    val id: ObjectId,
-    val name: String,
-    val position: Position
+    val id: ObjectId = ObjectId(),
+    val name: String = "",
+    val position: Position = Position.DEFAULT
 )
 
 data class Team(
-    val id: ObjectId,
-    val name: String,
-    val teamTag: TeamTag,
-    val tournamentId: ObjectId
+    val id: ObjectId = ObjectId(),
+    val name: String = "",
+    val teamTag: TeamTag = TeamTag.OTHER,
+    val tournamentId: ObjectId = ObjectId()
 )
 
 enum class Position(val value: String){
+    DEFAULT("DEFAULT"),
     FORWARD("Forward"),
     MIDFIELDER("Mid Fielder"),
     DEFENCE("Defence"),
@@ -40,11 +41,13 @@ enum class Position(val value: String){
 }
 
 enum class Status(val value: String){
+    DEFAULT("DEFAULT"),
     COMPLETED("COMPLETED"),
     UPCOMING("UPCOMING")
 }
 
 enum class TeamTag (val value: String){
+    OTHER("OT"),
     M_RED("RR"),
     M_BLUE("SB"),
     M_WHITE("WW"),
@@ -57,8 +60,7 @@ enum class TeamTag (val value: String){
     W_YELLOW("YY"),
     W_GREEN("GG"),
     W_VIOLET("VW"),
-    M_BLACK("BH"),
-    OTHER("OT")
+    M_BLACK("BH")
 }
 
 
