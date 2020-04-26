@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.disposables.CompositeDisposable
@@ -25,11 +25,11 @@ import java.util.concurrent.Executor
 
 abstract class BaseHomeFragment : Fragment() {
 
-    private val ahlViewModel by viewModels<AHLViewModel>()
+    private val ahlViewModel by activityViewModels<AHLViewModel>()
 
     private lateinit var compositeDisposable: CompositeDisposable
 
-    val oldState: AHLDataState = AHLDataState()
+    var oldState: AHLDataState? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +59,63 @@ abstract class BaseHomeFragment : Fragment() {
 
     abstract fun renderAhlDataState(newState: AHLDataState)
 
+    fun renderPreviousMatchLoaderUI(uiDataState: UIDataState) {
+        when(uiDataState){
+            UIDataState.SHOW_LOADER -> {
+                previous_match_shimmer.visibility = View.VISIBLE
+                previous_match_data.visibility = View.GONE
+            }
+
+            UIDataState.SHOW_DATA -> {
+                previous_match_shimmer.visibility = View.GONE
+                previous_match_data.visibility = View.VISIBLE
+            }
+
+            UIDataState.SHOW_ERROR -> {
+
+            }
+        }
+
+    }
+
+    fun renderPointsTableLoaderUI(uiDataState: UIDataState) {
+        when(uiDataState){
+
+            UIDataState.SHOW_LOADER -> {
+                points_table_shimmer.visibility = View.VISIBLE
+                points_table_data.visibility = View.GONE
+            }
+
+            UIDataState.SHOW_DATA -> {
+                points_table_shimmer.visibility = View.GONE
+                points_table_data.visibility = View.VISIBLE
+            }
+
+            UIDataState.SHOW_ERROR -> {
+
+            }
+        }
+    }
+
+    fun renderTopScorersLoaderUI(uiDataState: UIDataState) {
+        when(uiDataState){
+
+            UIDataState.SHOW_LOADER -> {
+                top_scorer_shimmer.visibility = View.VISIBLE
+                top_scorers_data.visibility = View.GONE
+            }
+
+            UIDataState.SHOW_DATA -> {
+                top_scorer_shimmer.visibility = View.GONE
+                top_scorers_data.visibility = View.VISIBLE
+            }
+
+            UIDataState.SHOW_ERROR -> {
+
+            }
+        }
+    }
+
     fun renderPreviousMatchData(fixtureData: FixtureData) {
 
         fixtureData.sortByDescending {
@@ -69,40 +126,39 @@ abstract class BaseHomeFragment : Fragment() {
             it.status == Status.COMPLETED
         }
 
-        val date = Date(previousMatchFixtureData!!.matchDateTime)
-        val simpleDateFormat = SimpleDateFormat("dd MMM yyyy - hh:mm a", Locale.US)
+        if (previousMatchFixtureData != null){
+            val date = Date(previousMatchFixtureData.matchDateTime)
+            val simpleDateFormat = SimpleDateFormat("dd MMM yyyy - hh:mm a", Locale.US)
 
-        requireView().findViewById<TextView>(R.id.pervious_match_date).text =
-            simpleDateFormat.format(date)
-        requireView().findViewById<TextView>(R.id.team1_name).text = previousMatchFixtureData.team1.name
-        requireView().findViewById<TextView>(R.id.team2_name).text =
-            previousMatchFixtureData.team2.name
-        requireView().findViewById<TextView>(R.id.budding_player).text =
-            previousMatchFixtureData.buddingPlayer.name
-        requireView().findViewById<TextView>(R.id.man_of_match).text =
-            previousMatchFixtureData.mom.name
+            requireView().findViewById<TextView>(R.id.pervious_match_date).text =
+                simpleDateFormat.format(date)
+            requireView().findViewById<TextView>(R.id.team1_name).text = previousMatchFixtureData.team1.name
+            requireView().findViewById<TextView>(R.id.team2_name).text =
+                previousMatchFixtureData.team2.name
+            requireView().findViewById<TextView>(R.id.budding_player).text =
+                previousMatchFixtureData.buddingPlayer.name
+            requireView().findViewById<TextView>(R.id.man_of_match).text =
+                previousMatchFixtureData.mom.name
 
-        val team1Scorers = previousMatchFixtureData.team1Scorers
-        requireView().findViewById<TextView>(R.id.team1_goals).text =
-            team1Scorers.values.sum().toString()
+            val team1Scorers = previousMatchFixtureData.team1Scorers
+            requireView().findViewById<TextView>(R.id.team1_goals).text =
+                team1Scorers.values.sum().toString()
 
-        val team2Scorers = previousMatchFixtureData.team2Scorers
-        requireView().findViewById<TextView>(R.id.team2_goals).text =
-            team2Scorers.values.sum().toString()
+            val team2Scorers = previousMatchFixtureData.team2Scorers
+            requireView().findViewById<TextView>(R.id.team2_goals).text =
+                team2Scorers.values.sum().toString()
 
-        requireView().findViewById<ImageView>(R.id.team1_logo).setImageResource(
-            getTeamLogo(
-                previousMatchFixtureData.team1.teamTag
+            requireView().findViewById<ImageView>(R.id.team1_logo).setImageResource(
+                getTeamLogo(
+                    previousMatchFixtureData.team1.teamTag
+                )
             )
-        )
-        requireView().findViewById<ImageView>(R.id.team2_logo).setImageResource(
-            getTeamLogo(
-                previousMatchFixtureData.team2.teamTag
+            requireView().findViewById<ImageView>(R.id.team2_logo).setImageResource(
+                getTeamLogo(
+                    previousMatchFixtureData.team2.teamTag
+                )
             )
-        )
-
-        previous_match_shimmer.visibility = View.GONE
-        previous_match_data.visibility = View.VISIBLE
+        }
     }
 
     fun renderPointsTable(pointsTableData: PointsTableData) {
@@ -110,9 +166,6 @@ abstract class BaseHomeFragment : Fragment() {
         pointsTableAdapter.updatePointsTabledata(pointsTableData)
         requireView().findViewById<RecyclerView>(R.id.points_table_recycler_view).adapter =
             pointsTableAdapter
-
-        points_table_shimmer.visibility = View.GONE
-        points_table_data.visibility = View.VISIBLE
     }
 
     fun renderTopScorersData(topScorersDataMen: TopScorersData) {
@@ -123,15 +176,12 @@ abstract class BaseHomeFragment : Fragment() {
 
         recyclerView.addItemDecoration(
             DividerItemDecoration(
-                recyclerView.getContext(),
+                recyclerView.context,
                 DividerItemDecoration.VERTICAL
             )
         )
 
         recyclerView.adapter = topScorersAdapter
-
-        top_scorer_shimmer.visibility = View.GONE
-        top_scorers_data.visibility = View.VISIBLE
     }
 }
 

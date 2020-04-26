@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <include layout="@layout/previous_match_layout_loader"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -202,7 +202,7 @@
             app:layout_constraintTop_toBottomOf="@id/previous_match_card">
 
             <include layout="@layout/points_table_shimmer_loader"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -241,7 +241,7 @@
             app:layout_constraintTop_toBottomOf="@id/points_table_card">
 
             <include layout="@layout/top_scorer_shimmer_layout"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>

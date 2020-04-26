@@ -7,17 +7,19 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager.widget.PagerAdapter
-import com.orhanobut.logger.Logger
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_ahl_layout.*
 
-class AHLFragment: Fragment() {
+class AHLFragment : Fragment() {
 
-    private val ahlViewModel by viewModels<AHLViewModel>()
+    private val ahlViewModel by activityViewModels<AHLViewModel>()
 
-    lateinit var compositeDisposable: CompositeDisposable
+    private lateinit var compositeDisposable: CompositeDisposable
+
+    private var oldState: AHLDataState? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,9 +31,30 @@ class AHLFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         compositeDisposable = CompositeDisposable()
-        compositeDisposable.add(ahlViewModel.uistateStream.subscribe(this::setUiAlert))
+        compositeDisposable.add(ahlViewModel.ahlDataStateStream
+            .observeOn(Schedulers.from(UIThreadExecutor()))
+            .subscribe {
+
+                if (oldState == null || oldState!!.loaderData.tournamentData != it.loaderData.tournamentData) {
+
+                    when (it.loaderData.tournamentData) {
+
+                        UIDataState.SHOW_LOADER -> {
+
+                        }
+
+                        UIDataState.SHOW_DATA -> {
+
+                        }
+
+                        UIDataState.SHOW_ERROR -> {
+
+                        }
+                    }
+                }
+                oldState = it
+            })
 
         ahl_tab_layout.setupWithViewPager(ahl_view_pager)
         val ahlTabAdapter = AhlTabAdapter(parentFragmentManager)
@@ -46,17 +69,15 @@ class AHLFragment: Fragment() {
 
     }
 
-    private fun setUiAlert(uiState: UIState){
-        when(uiState){
-            NETWORK_NOT_AVAILABLE -> TODO()
-            NETWORK_AVAILABLE -> TODO()
-            is NETWORK_REQUEST_FAILED -> {
-               Logger.wtf(uiState.value)
-            }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (!compositeDisposable.isDisposed) {
+            compositeDisposable.dispose()
         }
     }
 
-    inner class AhlTabAdapter internal constructor(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT){
+    inner class AhlTabAdapter internal constructor(fragmentManager: FragmentManager) :
+        FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
         private val fragmentList = java.util.ArrayList<Fragment>()
 

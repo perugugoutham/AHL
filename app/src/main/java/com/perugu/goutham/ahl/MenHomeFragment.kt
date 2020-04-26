@@ -1,26 +1,41 @@
 package com.perugu.goutham.ahl
 
-import androidx.recyclerview.widget.RecyclerView
-
 class MenHomeFragment: BaseHomeFragment() {
 
     override fun renderAhlDataState(newState: AHLDataState) {
         val fixtureDataMen = newState.fixtureDataMen
-        if (oldState.fixtureDataMen != fixtureDataMen){
+        if (oldState == null || oldState!!.fixtureDataMen != fixtureDataMen){
             renderPreviousMatchData(fixtureDataMen)
+        }
+
+        val fixtureForMenLoader = newState.loaderData.fixtureForMen
+        if (oldState == null || oldState!!.loaderData.fixtureForMen != fixtureForMenLoader){
+            renderPreviousMatchLoaderUI(fixtureForMenLoader)
         }
 
         val pointsTableDataMen = newState.pointsTableDataMen
 
-        if (oldState.pointsTableDataMen != pointsTableDataMen){
+        if (oldState == null || oldState!!.pointsTableDataMen != pointsTableDataMen){
             renderPointsTable(pointsTableDataMen)
+        }
+
+        val pointsForMenLoader = newState.loaderData.pointsForMen
+        if (oldState == null || oldState!!.loaderData.pointsForMen != pointsForMenLoader){
+            renderPointsTableLoaderUI(pointsForMenLoader)
         }
 
         val topScorersDataMen = newState.topScorersDataMen
 
-        if (oldState.topScorersDataMen != topScorersDataMen){
+        if (oldState == null || oldState!!.topScorersDataMen != topScorersDataMen){
             renderTopScorersData(topScorersDataMen)
         }
+
+        val tableTopperForMenLoader = newState.loaderData.tableTopperForMen
+        if (oldState == null || oldState!!.loaderData.tableTopperForMen != tableTopperForMenLoader){
+            renderTopScorersLoaderUI(tableTopperForMenLoader)
+        }
+
+        oldState = newState
     }
 
 }
