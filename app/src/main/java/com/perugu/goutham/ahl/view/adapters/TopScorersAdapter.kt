@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.perugu.goutham.ahl.R
 import com.perugu.goutham.ahl.data.TopScorersData
 import com.perugu.goutham.ahl.view.fragments.getTeamLogo
+import com.squareup.picasso.Picasso
 
 class TopScorersAdapter: RecyclerView.Adapter<TopScorersAdapter.TopScorersViewHolder>() {
 
@@ -32,11 +33,11 @@ class TopScorersAdapter: RecyclerView.Adapter<TopScorersAdapter.TopScorersViewHo
     override fun onBindViewHolder(holder: TopScorersViewHolder, position: Int) {
         if (topScorersData != null){
             val topScorersDataItem = topScorersData!![position]
-            holder.teamLogo.setImageResource(
-                getTeamLogo(
+            Picasso.get()
+                .load(getTeamLogo(
                     topScorersDataItem.team.teamTag
-                )
-            )
+                ))
+                .into(holder.teamLogo)
             holder.playerName.text = topScorersDataItem.player.name
             holder.teamName.text = topScorersDataItem.team.name
             holder.goals.text = topScorersDataItem.goals.toString()

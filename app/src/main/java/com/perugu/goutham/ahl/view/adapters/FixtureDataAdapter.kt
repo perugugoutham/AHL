@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.perugu.goutham.ahl.R
 import com.perugu.goutham.ahl.data.FixtureData
 import com.perugu.goutham.ahl.view.fragments.getTeamLogo
+import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -45,8 +46,14 @@ class FixtureDataAdapter : RecyclerView.Adapter<FixtureDataAdapter.FixtureDataHo
             holder.team2_name.text = fixtureData.team2.name
             holder.team1_goals.text = fixtureData.team1Scorers.values.sum().toString()
             holder.team2_goals.text = fixtureData.team2Scorers.values.sum().toString()
-            holder.team1_logo.setImageResource(getTeamLogo(fixtureData.team1.teamTag))
-            holder.team2_logo.setImageResource(getTeamLogo(fixtureData.team2.teamTag))
+
+            Picasso.get()
+                .load(getTeamLogo(fixtureData.team1.teamTag))
+                .into(holder.team1_logo)
+
+            Picasso.get()
+                .load(getTeamLogo(fixtureData.team2.teamTag))
+                .into(holder.team2_logo)
         }
     }
 

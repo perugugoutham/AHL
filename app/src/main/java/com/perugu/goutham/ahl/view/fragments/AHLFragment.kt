@@ -107,6 +107,7 @@ class AHLFragment : Fragment() {
                 }
 
                 UIDataState.SHOW_ERROR -> {
+                    swipeRefreshLayout.isRefreshing = false
                     textView.text = getString(R.string.something_went_wrong)
                     textView.setBackgroundColor(
                         ContextCompat.getColor(
