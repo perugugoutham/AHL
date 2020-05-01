@@ -31,7 +31,7 @@ class AHLViewModel(application: Application): AndroidViewModel(application) {
         subscribeToNetworkRequestState()
     }
 
-    private fun fetchTournamentId(){
+    fun fetchTournamentId(){
         networkRequestRepo.fetchTournamentId()
     }
 

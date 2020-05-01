@@ -1,7 +1,9 @@
 package com.perugu.goutham.ahl.view.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -10,14 +12,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.fragment.app.activityViewModels
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
+import com.perugu.goutham.ahl.R
 import com.perugu.goutham.ahl.view_model.AHLDataState
 import com.perugu.goutham.ahl.view_model.AHLViewModel
-import com.perugu.goutham.ahl.R
 import com.perugu.goutham.ahl.view_model.UIDataState
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_ahl_layout.*
+
 
 class AHLFragment : Fragment() {
 
@@ -35,9 +40,11 @@ class AHLFragment : Fragment() {
         return layoutInflater.inflate(R.layout.fragment_ahl_layout, container, false)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         compositeDisposable = CompositeDisposable()
+        val swipeRefreshLayout = requireView().findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)
         compositeDisposable.add(ahlViewModel.ahlDataStateStream
             .observeOn(Schedulers.from(UIThreadExecutor()))
             .subscribe {
@@ -53,6 +60,7 @@ class AHLFragment : Fragment() {
                         }
 
                         UIDataState.SHOW_DATA -> {
+                            swipeRefreshLayout.isRefreshing = false
                             textView.visibility = View.GONE
                         }
 
@@ -66,7 +74,20 @@ class AHLFragment : Fragment() {
                 oldState = it
             })
 
-        ahl_tab_layout.setupWithViewPager(ahl_view_pager)
+        val tabLayout = requireView().findViewById<TabLayout>(R.id.ahl_tab_layout)
+
+        val viewPager = requireView().findViewById<ViewPager>(R.id.ahl_view_pager)
+
+        viewPager.setOnTouchListener { v, event ->
+            swipeRefreshLayout.isEnabled = false
+            when (event?.action) {
+                MotionEvent.ACTION_UP -> swipeRefreshLayout.isEnabled = true
+            }
+            false
+        }
+
+        tabLayout.setupWithViewPager(viewPager)
+
         val ahlTabAdapter = AhlTabAdapter(parentFragmentManager)
 
         val menHomeFragment = MenHomeFragment()
@@ -75,7 +96,11 @@ class AHLFragment : Fragment() {
         val womenHomeFragment = WomenHomeFragment()
         ahlTabAdapter.addFragment(womenHomeFragment)
 
-        ahl_view_pager.adapter = ahlTabAdapter
+        viewPager.adapter = ahlTabAdapter
+
+        swipeRefreshLayout.setOnRefreshListener {
+            ahlViewModel.fetchTournamentId()
+        }
 
     }
 
