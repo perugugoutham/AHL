@@ -283,6 +283,10 @@ class AHLViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
+    fun actionUpdateSelectedState(selectedFragment: SelectedFragment) {
+        ahlDataStateStream.accept(ahlDataStateStream.value!!.copy(selectedFragment = selectedFragment))
+    }
+
 }
 
 data class AHLDataState(
@@ -299,8 +303,15 @@ data class AHLDataState(
     val topScorersDataMen: TopScorersData = TopScorersData(),
     val topScorersDataWomen: TopScorersData = TopScorersData(),
 
-    val tournamentData: TournamentData = TournamentData()
+    val tournamentData: TournamentData = TournamentData(),
+
+    val selectedFragment: SelectedFragment = SelectedFragment.HOME
 )
+
+enum class SelectedFragment {
+    HOME,
+    FIXTURE
+}
 
 
 data class LoaderData(

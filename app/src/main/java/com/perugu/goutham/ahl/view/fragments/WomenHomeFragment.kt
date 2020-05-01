@@ -1,8 +1,10 @@
 package com.perugu.goutham.ahl.view.fragments
 
+import com.perugu.goutham.ahl.R
 import com.perugu.goutham.ahl.view_model.AHLDataState
 
 class WomenHomeFragment: BaseHomeFragment() {
+
 
     override fun renderAhlDataState(newState: AHLDataState) {
 
@@ -40,6 +42,10 @@ class WomenHomeFragment: BaseHomeFragment() {
         }
 
         oldState = newState
+    }
+
+    override fun getImageBasedOngender(): Int {
+        return R.drawable.women_image
     }
 
 

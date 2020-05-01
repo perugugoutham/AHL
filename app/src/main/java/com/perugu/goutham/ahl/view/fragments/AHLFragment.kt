@@ -15,10 +15,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.perugu.goutham.ahl.R
 import com.perugu.goutham.ahl.view_model.AHLDataState
 import com.perugu.goutham.ahl.view_model.AHLViewModel
+import com.perugu.goutham.ahl.view_model.SelectedFragment
 import com.perugu.goutham.ahl.view_model.UIDataState
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -44,37 +46,32 @@ class AHLFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         compositeDisposable = CompositeDisposable()
-        val swipeRefreshLayout = requireView().findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)
-        compositeDisposable.add(ahlViewModel.ahlDataStateStream
-            .observeOn(Schedulers.from(UIThreadExecutor()))
-            .subscribe {
-                val textView = requireView().findViewById<TextView>(R.id.error_msg)
-                if (oldState == null || oldState!!.loaderData.tournamentData != it.loaderData.tournamentData) {
+        val swipeRefreshLayout =
+            requireView().findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)
+        compositeDisposable.add(
+            ahlViewModel.ahlDataStateStream
+                .observeOn(Schedulers.from(UIThreadExecutor()))
+                .subscribe(this::renderState)
+        )
 
-                    when (it.loaderData.tournamentData) {
+        val bottomNavigationView =
+            requireView().findViewById<BottomNavigationView>(R.id.ahl_bottom_navigation_view)
 
-                        UIDataState.SHOW_LOADER -> {
-                            textView.text = getString(R.string.loading)
-                            textView.setBackgroundColor(ContextCompat.getColor(textView.context, R.color.orange))
-                            textView.visibility = View.VISIBLE
-                        }
+        bottomNavigationView.setOnNavigationItemSelectedListener {
 
-                        UIDataState.SHOW_DATA -> {
-                            swipeRefreshLayout.isRefreshing = false
-                            textView.visibility = View.GONE
-                        }
+            when (it.itemId) {
 
-                        UIDataState.SHOW_ERROR -> {
-                            textView.text = getString(R.string.something_went_wrong)
-                            textView.setBackgroundColor(ContextCompat.getColor(textView.context, R.color.red))
-                            textView.visibility = View.VISIBLE
-                        }
-                    }
+                R.id.bottom_nav_home -> {
+                    ahlViewModel.actionUpdateSelectedState(SelectedFragment.HOME)
                 }
-                oldState = it
-            })
 
-        val tabLayout = requireView().findViewById<TabLayout>(R.id.ahl_tab_layout)
+                R.id.bottom_nav_fixture -> {
+                    ahlViewModel.actionUpdateSelectedState(SelectedFragment.FIXTURE)
+                }
+            }
+
+            true
+        }
 
         val viewPager = requireView().findViewById<ViewPager>(R.id.ahl_view_pager)
 
@@ -86,22 +83,78 @@ class AHLFragment : Fragment() {
             false
         }
 
-        tabLayout.setupWithViewPager(viewPager)
-
-        val ahlTabAdapter = AhlTabAdapter(parentFragmentManager)
-
-        val menHomeFragment = MenHomeFragment()
-        ahlTabAdapter.addFragment(menHomeFragment)
-
-        val womenHomeFragment = WomenHomeFragment()
-        ahlTabAdapter.addFragment(womenHomeFragment)
-
-        viewPager.adapter = ahlTabAdapter
-
         swipeRefreshLayout.setOnRefreshListener {
             ahlViewModel.fetchTournamentId()
         }
 
+    }
+
+    private fun renderState(newState: AHLDataState) {
+        val textView = requireView().findViewById<TextView>(R.id.error_msg)
+        val swipeRefreshLayout =
+            requireView().findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)
+        if (oldState == null || oldState!!.loaderData.tournamentData != newState.loaderData.tournamentData) {
+            when (newState.loaderData.tournamentData) {
+
+                UIDataState.SHOW_LOADER -> {
+                    swipeRefreshLayout.isRefreshing = true
+                    textView.visibility = View.GONE
+                }
+
+                UIDataState.SHOW_DATA -> {
+                    swipeRefreshLayout.isRefreshing = false
+                    textView.visibility = View.GONE
+                }
+
+                UIDataState.SHOW_ERROR -> {
+                    textView.text = getString(R.string.something_went_wrong)
+                    textView.setBackgroundColor(
+                        ContextCompat.getColor(
+                            textView.context,
+                            R.color.red
+                        )
+                    )
+                    textView.visibility = View.VISIBLE
+                }
+            }
+        }
+
+        if (oldState == null || oldState!!.selectedFragment != newState.selectedFragment) {
+            val tabLayout = requireView().findViewById<TabLayout>(R.id.ahl_tab_layout)
+
+            val viewPager = requireView().findViewById<ViewPager>(R.id.ahl_view_pager)
+            tabLayout.setupWithViewPager(viewPager)
+
+            val ahlTabAdapter = AhlTabAdapter(parentFragmentManager)
+            viewPager.adapter = ahlTabAdapter
+
+            val bottomNavigationView =
+                requireView().findViewById<BottomNavigationView>(R.id.ahl_bottom_navigation_view)
+
+            when (newState.selectedFragment) {
+                SelectedFragment.HOME -> {
+                    val menHomeFragment = MenHomeFragment()
+                    val womenHomeFragment = WomenHomeFragment()
+                    val homeFragments = arrayListOf<Fragment>()
+                    homeFragments.add(menHomeFragment)
+                    homeFragments.add(womenHomeFragment)
+                    ahlTabAdapter.updateFragmentList(homeFragments)
+                    bottomNavigationView.selectedItemId = R.id.bottom_nav_home
+                }
+                SelectedFragment.FIXTURE -> {
+                    val menFixtureFragment = MenFixtureFragment()
+                    val womenFixtureFragment = WomenFixtureFragment()
+                    val fixtureFrags = arrayListOf<Fragment>()
+                    fixtureFrags.add(menFixtureFragment)
+                    fixtureFrags.add(womenFixtureFragment)
+                    ahlTabAdapter.updateFragmentList(fixtureFrags)
+                    bottomNavigationView.selectedItemId = R.id.bottom_nav_fixture
+
+                }
+            }
+        }
+
+        oldState = newState
     }
 
     override fun onDestroyView() {
@@ -114,7 +167,7 @@ class AHLFragment : Fragment() {
     inner class AhlTabAdapter internal constructor(fragmentManager: FragmentManager) :
         FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-        private val fragmentList = java.util.ArrayList<Fragment>()
+        private var fragmentList = ArrayList<Fragment>()
 
         override fun getItem(position: Int): Fragment {
             return fragmentList[position]
@@ -124,8 +177,9 @@ class AHLFragment : Fragment() {
             return PagerAdapter.POSITION_NONE
         }
 
-        internal fun addFragment(fragment: Fragment) {
-            fragmentList.add(fragment)
+        internal fun updateFragmentList(fragments: ArrayList<Fragment>) {
+            this.fragmentList = fragments
+            notifyDataSetChanged()
         }
 
         override fun getCount(): Int {

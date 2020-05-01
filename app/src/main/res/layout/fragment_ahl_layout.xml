@@ -37,7 +37,7 @@
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/ahl_bottom_navigation_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ahl_tab_layout">
@@ -50,5 +50,15 @@
             android:layout_height="0dp" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        app:labelVisibilityMode="labeled"
+        android:background="@color/white"
+        android:animateLayoutChanges="true"
+        app:menu="@menu/ahl_bottom_van_menu"
+        android:id="@+id/ahl_bottom_navigation_view"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
