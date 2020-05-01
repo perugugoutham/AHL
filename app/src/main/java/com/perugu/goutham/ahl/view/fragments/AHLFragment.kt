@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -39,21 +41,25 @@ class AHLFragment : Fragment() {
         compositeDisposable.add(ahlViewModel.ahlDataStateStream
             .observeOn(Schedulers.from(UIThreadExecutor()))
             .subscribe {
-
+                val textView = requireView().findViewById<TextView>(R.id.error_msg)
                 if (oldState == null || oldState!!.loaderData.tournamentData != it.loaderData.tournamentData) {
 
                     when (it.loaderData.tournamentData) {
 
                         UIDataState.SHOW_LOADER -> {
-
+                            textView.text = getString(R.string.loading)
+                            textView.setBackgroundColor(ContextCompat.getColor(textView.context, R.color.orange))
+                            textView.visibility = View.VISIBLE
                         }
 
                         UIDataState.SHOW_DATA -> {
-
+                            textView.visibility = View.GONE
                         }
 
                         UIDataState.SHOW_ERROR -> {
-
+                            textView.text = getString(R.string.something_went_wrong)
+                            textView.setBackgroundColor(ContextCompat.getColor(textView.context, R.color.red))
+                            textView.visibility = View.VISIBLE
                         }
                     }
                 }

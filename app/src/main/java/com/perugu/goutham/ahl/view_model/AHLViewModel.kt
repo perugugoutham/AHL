@@ -174,37 +174,37 @@ class AHLViewModel(application: Application): AndroidViewModel(application) {
 
                             NetworkRequestAction.FIXTURE_FOR_WOMEN -> {
                                 val updatedLoaderData =
-                                    ahlDataStateStream.value!!.loaderData.copy(fixtureForMen = UIDataState.SHOW_ERROR)
+                                    ahlDataStateStream.value!!.loaderData.copy(fixtureForWomen = UIDataState.SHOW_ERROR)
                                 ahlDataStateStream.value!!.copy(loaderData = updatedLoaderData)
                             }
 
                             NetworkRequestAction.POINTS_TABLE_FOR_MEN -> {
                                 val updatedLoaderData =
-                                    ahlDataStateStream.value!!.loaderData.copy(fixtureForMen = UIDataState.SHOW_ERROR)
+                                    ahlDataStateStream.value!!.loaderData.copy(pointsForMen = UIDataState.SHOW_ERROR)
                                 ahlDataStateStream.value!!.copy(loaderData = updatedLoaderData)
                             }
 
                             NetworkRequestAction.POINTS_TABLE_FOR_WOMEN -> {
                                 val updatedLoaderData =
-                                    ahlDataStateStream.value!!.loaderData.copy(fixtureForMen = UIDataState.SHOW_ERROR)
+                                    ahlDataStateStream.value!!.loaderData.copy(pointsTableForWomen = UIDataState.SHOW_ERROR)
                                 ahlDataStateStream.value!!.copy(loaderData = updatedLoaderData)
                             }
 
                             NetworkRequestAction.TOP_SCORER_FOR_MEN -> {
                                 val updatedLoaderData =
-                                    ahlDataStateStream.value!!.loaderData.copy(fixtureForMen = UIDataState.SHOW_ERROR)
+                                    ahlDataStateStream.value!!.loaderData.copy(tableTopperForMen = UIDataState.SHOW_ERROR)
                                 ahlDataStateStream.value!!.copy(loaderData = updatedLoaderData)
                             }
 
                             NetworkRequestAction.TOP_SCORER_FOR_WOMEN -> {
                                 val updatedLoaderData =
-                                    ahlDataStateStream.value!!.loaderData.copy(fixtureForMen = UIDataState.SHOW_ERROR)
+                                    ahlDataStateStream.value!!.loaderData.copy(tableTopperForWomen = UIDataState.SHOW_ERROR)
                                 ahlDataStateStream.value!!.copy(loaderData = updatedLoaderData)
                             }
 
                             NetworkRequestAction.TOURNAMENT_ID -> {
                                 val updatedLoaderData =
-                                    ahlDataStateStream.value!!.loaderData.copy(fixtureForMen = UIDataState.SHOW_ERROR)
+                                    ahlDataStateStream.value!!.loaderData.copy(tournamentData = UIDataState.SHOW_ERROR)
                                 ahlDataStateStream.value!!.copy(loaderData = updatedLoaderData)
                             }
                         }

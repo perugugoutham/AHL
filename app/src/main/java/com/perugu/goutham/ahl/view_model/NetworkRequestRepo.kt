@@ -31,6 +31,12 @@ class NetworkRequestRepo(
 
             override fun onFailure(call: Call, e: IOException) {
                 Logger.e("TournamentId fetch failed")
+                networkRequestStateStream.accept(
+                    Failed(
+                        NetworkRequestAction.TOURNAMENT_ID,
+                        -1
+                    )
+                )
             }
 
             override fun onResponse(call: Call, response: Response) {
