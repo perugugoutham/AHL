@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/match_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/match_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/match_date"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="15 mar 2020, 07:40pm" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/team1_logo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toStartOf="@id/team1_goals"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/match_date"
+                tools:src="@drawable/bluz" />
+
+            <TextView
+                android:id="@+id/team1_goals"
+                style="@style/GoalTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/team1_logo"
+                app:layout_constraintEnd_toStartOf="@id/column"
+                app:layout_constraintStart_toEndOf="@id/team1_logo"
+                app:layout_constraintTop_toTopOf="@id/team1_logo"
+                tools:text="2" />
+
+            <TextView
+                android:id="@+id/column"
+                style="@style/GoalTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/col"
+                app:layout_constraintBottom_toBottomOf="@id/team1_goals"
+                app:layout_constraintEnd_toStartOf="@id/team2_goals"
+                app:layout_constraintStart_toEndOf="@id/team1_goals"
+                app:layout_constraintTop_toTopOf="@id/team1_goals" />
+
+            <TextView
+                android:id="@+id/team2_goals"
+                style="@style/GoalTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/column"
+                app:layout_constraintEnd_toStartOf="@id/team2_logo"
+                app:layout_constraintStart_toEndOf="@id/column"
+                app:layout_constraintTop_toTopOf="@id/column"
+                tools:text="3" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/team2_logo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintBottom_toBottomOf="@id/team1_logo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/team2_goals"
+                app:layout_constraintTop_toTopOf="@id/team1_logo"
+                tools:src="@drawable/bluz" />
+
+            <TextView
+                android:id="@+id/team1_name"
+                style="@style/TeamNameStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:layout_constraintEnd_toEndOf="@id/team1_logo"
+                app:layout_constraintStart_toStartOf="@id/team1_logo"
+                app:layout_constraintTop_toBottomOf="@id/team1_logo"
+                tools:text="White warriorz" />
+
+            <TextView
+                android:id="@+id/team2_name"
+                style="@style/TeamNameStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:layout_constraintEnd_toEndOf="@id/team2_logo"
+                app:layout_constraintStart_toStartOf="@id/team2_logo"
+                app:layout_constraintTop_toBottomOf="@id/team2_logo"
+                tools:text="White warriorz" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/match_shimmer"
+    android:padding="10dp">
+
+    
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <View
+                    android:id="@+id/date_shimmer"
+                    android:layout_width="80dp"
+                    android:layout_height="20dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintStart_toStartOf="@id/team1_logo_shimmer"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/team1_logo_shimmer"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintEnd_toStartOf="@id/team1_goals_shimmer"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/date_shimmer" />
+
+                <View
+                    android:id="@+id/team1_goals_shimmer"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintBottom_toBottomOf="@id/team1_logo_shimmer"
+                    app:layout_constraintEnd_toStartOf="@id/team2_goals_shimmer"
+                    app:layout_constraintStart_toEndOf="@id/team1_logo_shimmer"
+                    app:layout_constraintTop_toTopOf="@id/team1_logo_shimmer" />
+
+
+                <View
+                    android:id="@+id/team2_goals_shimmer"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintBottom_toBottomOf="@id/team1_logo_shimmer"
+                    app:layout_constraintEnd_toStartOf="@id/team2_logo_shimmer"
+                    app:layout_constraintStart_toEndOf="@id/team1_goals_shimmer"
+                    app:layout_constraintTop_toTopOf="@id/team1_logo_shimmer" />
+
+                <View
+                    android:id="@+id/team2_logo_shimmer"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/team2_goals_shimmer"
+                    app:layout_constraintTop_toTopOf="@id/team1_logo_shimmer" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            
+            app:cardCornerRadius="10dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <View
+                    android:id="@+id/date_shimmer1"
+                    android:layout_width="80dp"
+                    android:layout_height="20dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintStart_toStartOf="@id/team1_logo_shimmer1"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/team1_logo_shimmer1"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintEnd_toStartOf="@id/team1_goals_shimmer1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/date_shimmer1" />
+
+                <View
+                    android:id="@+id/team1_goals_shimmer1"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintBottom_toBottomOf="@id/team1_logo_shimmer1"
+                    app:layout_constraintEnd_toStartOf="@id/team2_goals_shimmer1"
+                    app:layout_constraintStart_toEndOf="@id/team1_logo_shimmer1"
+                    app:layout_constraintTop_toTopOf="@id/team1_logo_shimmer1" />
+
+
+                <View
+                    android:id="@+id/team2_goals_shimmer1"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintBottom_toBottomOf="@id/team1_logo_shimmer1"
+                    app:layout_constraintEnd_toStartOf="@id/team2_logo_shimmer1"
+                    app:layout_constraintStart_toEndOf="@id/team1_goals_shimmer1"
+                    app:layout_constraintTop_toTopOf="@id/team1_logo_shimmer1" />
+
+                <View
+                    android:id="@+id/team2_logo_shimmer1"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/team2_goals_shimmer1"
+                    app:layout_constraintTop_toTopOf="@id/team1_logo_shimmer1" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            
+            app:cardCornerRadius="10dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <View
+                    android:id="@+id/date_shimmer2"
+                    android:layout_width="80dp"
+                    android:layout_height="20dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintStart_toStartOf="@id/team1_logo_shimmer2"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/team1_logo_shimmer2"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintEnd_toStartOf="@id/team1_goals_shimmer2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/date_shimmer2" />
+
+                <View
+                    android:id="@+id/team1_goals_shimmer2"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintBottom_toBottomOf="@id/team1_logo_shimmer2"
+                    app:layout_constraintEnd_toStartOf="@id/team2_goals_shimmer2"
+                    app:layout_constraintStart_toEndOf="@id/team1_logo_shimmer2"
+                    app:layout_constraintTop_toTopOf="@id/team1_logo_shimmer2" />
+
+
+                <View
+                    android:id="@+id/team2_goals_shimmer2"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintBottom_toBottomOf="@id/team1_logo_shimmer2"
+                    app:layout_constraintEnd_toStartOf="@id/team2_logo_shimmer2"
+                    app:layout_constraintStart_toEndOf="@id/team1_goals_shimmer2"
+                    app:layout_constraintTop_toTopOf="@id/team1_logo_shimmer2" />
+
+                <View
+                    android:id="@+id/team2_logo_shimmer2"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/team2_goals_shimmer2"
+                    app:layout_constraintTop_toTopOf="@id/team1_logo_shimmer2" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            
+            app:cardCornerRadius="10dp">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <View
+                    android:id="@+id/date_shimmer3"
+                    android:layout_width="80dp"
+                    android:layout_height="20dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintStart_toStartOf="@id/team1_logo_shimmer3"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/team1_logo_shimmer3"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintEnd_toStartOf="@id/team1_goals_shimmer3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/date_shimmer3" />
+
+                <View
+                    android:id="@+id/team1_goals_shimmer3"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintBottom_toBottomOf="@id/team1_logo_shimmer3"
+                    app:layout_constraintEnd_toStartOf="@id/team2_goals_shimmer3"
+                    app:layout_constraintStart_toEndOf="@id/team1_logo_shimmer3"
+                    app:layout_constraintTop_toTopOf="@id/team1_logo_shimmer3" />
+
+
+                <View
+                    android:id="@+id/team2_goals_shimmer3"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintBottom_toBottomOf="@id/team1_logo_shimmer3"
+                    app:layout_constraintEnd_toStartOf="@id/team2_logo_shimmer3"
+                    app:layout_constraintStart_toEndOf="@id/team1_goals_shimmer3"
+                    app:layout_constraintTop_toTopOf="@id/team1_logo_shimmer3" />
+
+                <View
+                    android:id="@+id/team2_logo_shimmer3"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/shimmer_bg"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/team2_goals_shimmer3"
+                    app:layout_constraintTop_toTopOf="@id/team1_logo_shimmer3" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+</LinearLayout>

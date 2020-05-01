@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -165,8 +166,15 @@ abstract class BaseHomeFragment : Fragment() {
                     previousMatchFixtureData.team2.teamTag
                 )
             )
+            val buddingPlayerPic = requireView().findViewById<ImageView>(R.id.budding_player_pic)
+            buddingPlayerPic.setImageDrawable(ContextCompat.getDrawable(buddingPlayerPic.context, getImageBasedOngender()))
+
+            val momPic = requireView().findViewById<ImageView>(R.id.man_of_match_pic)
+            momPic.setImageDrawable(ContextCompat.getDrawable(momPic.context, getImageBasedOngender()))
         }
     }
+
+    abstract fun getImageBasedOngender(): Int
 
     fun renderPointsTable(pointsTableData: PointsTableData) {
         val pointsTableAdapter = PointsTableAdapter()
