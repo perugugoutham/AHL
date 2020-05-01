@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/shimmer_bg"
-    tools:context=".AHLActivty">
+    tools:context=".view.AHLActivty">
 
     <fragment
         android:id="@+id/navHostFragment"

@@ -1,7 +1,8 @@
-package com.perugu.goutham.ahl
+package com.perugu.goutham.ahl.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.perugu.goutham.ahl.R
 
 class AHLActivty : AppCompatActivity() {
 

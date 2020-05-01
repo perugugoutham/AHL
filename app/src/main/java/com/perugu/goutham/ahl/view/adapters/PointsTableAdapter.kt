@@ -1,12 +1,14 @@
-package com.perugu.goutham.ahl
+package com.perugu.goutham.ahl.view.adapters
 
-import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.perugu.goutham.ahl.data.PointsTableData
+import com.perugu.goutham.ahl.R
+import com.perugu.goutham.ahl.view.fragments.getTeamLogo
 import java.util.*
 
 
@@ -57,7 +59,11 @@ class PointsTableAdapter : RecyclerView.Adapter<PointsTableAdapter.PointsTableHo
                 holder.draw.text = pointsTableDataItem.draw.toString()
                 holder.goalDifference.text = pointsTableDataItem.goalDifference.toString()
                 holder.points.text = pointsTableDataItem.points.toString()
-                holder.teamLogo.setImageResource(getTeamLogo(pointsTableDataItem.team.teamTag))
+                holder.teamLogo.setImageResource(
+                    getTeamLogo(
+                        pointsTableDataItem.team.teamTag
+                    )
+                )
             }
         }
 

@@ -5,13 +5,13 @@
 
     <fragment
         android:id="@+id/AHLFragment"
-        android:name="com.perugu.goutham.ahl.AHLFragment"
+        android:name="com.perugu.goutham.ahl.view.fragments.AHLFragment"
         android:label="AHLFragment">
     </fragment>
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.perugu.goutham.ahl.MenHomeFragment"
+        android:name="com.perugu.goutham.ahl.view.fragments.MenHomeFragment"
         android:label="HomeFragment"/>
 
 </navigation>

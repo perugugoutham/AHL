@@ -1,4 +1,4 @@
-package com.perugu.goutham.ahl
+package com.perugu.goutham.ahl.view.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,10 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager.widget.PagerAdapter
+import com.perugu.goutham.ahl.view_model.AHLDataState
+import com.perugu.goutham.ahl.view_model.AHLViewModel
+import com.perugu.goutham.ahl.R
+import com.perugu.goutham.ahl.view_model.UIDataState
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_ahl_layout.*

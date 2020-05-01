@@ -1,4 +1,6 @@
-package com.perugu.goutham.ahl
+package com.perugu.goutham.ahl.view.fragments
+
+import com.perugu.goutham.ahl.view_model.AHLDataState
 
 class MenHomeFragment: BaseHomeFragment() {
 

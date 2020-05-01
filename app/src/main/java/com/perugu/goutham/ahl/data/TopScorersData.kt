@@ -1,4 +1,6 @@
-package com.perugu.goutham.ahl
+package com.perugu.goutham.ahl.data
+
+import com.perugu.goutham.ahl.view_model.Category
 
 class TopScorersData : ArrayList<TopScorersDataItem>()
 

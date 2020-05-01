@@ -1,4 +1,4 @@
-package com.perugu.goutham.ahl
+package com.perugu.goutham.ahl.view.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.perugu.goutham.ahl.R
+import com.perugu.goutham.ahl.data.TopScorersData
+import com.perugu.goutham.ahl.view.fragments.getTeamLogo
 
 class TopScorersAdapter: RecyclerView.Adapter<TopScorersAdapter.TopScorersViewHolder>() {
 
@@ -29,7 +32,11 @@ class TopScorersAdapter: RecyclerView.Adapter<TopScorersAdapter.TopScorersViewHo
     override fun onBindViewHolder(holder: TopScorersViewHolder, position: Int) {
         if (topScorersData != null){
             val topScorersDataItem = topScorersData!![position]
-            holder.teamLogo.setImageResource(getTeamLogo(topScorersDataItem.team.teamTag))
+            holder.teamLogo.setImageResource(
+                getTeamLogo(
+                    topScorersDataItem.team.teamTag
+                )
+            )
             holder.playerName.text = topScorersDataItem.player.name
             holder.teamName.text = topScorersDataItem.team.name
             holder.goals.text = topScorersDataItem.goals.toString()

@@ -1,4 +1,4 @@
-package com.perugu.goutham.ahl
+package com.perugu.goutham.ahl.data
 
 import org.bson.types.ObjectId
 

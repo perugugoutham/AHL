@@ -1,10 +1,11 @@
-package com.perugu.goutham.ahl
+package com.perugu.goutham.ahl.view_model
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.google.gson.Gson
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
+import com.perugu.goutham.ahl.data.*
 import com.readystatesoftware.chuck.ChuckInterceptor
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxjava3.core.Flowable

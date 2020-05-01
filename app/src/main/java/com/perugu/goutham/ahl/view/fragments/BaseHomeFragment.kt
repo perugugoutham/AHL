@@ -1,4 +1,4 @@
-package com.perugu.goutham.ahl
+package com.perugu.goutham.ahl.view.fragments
 
 import android.os.Bundle
 import android.os.Handler
@@ -12,6 +12,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import com.perugu.goutham.ahl.*
+import com.perugu.goutham.ahl.data.*
+import com.perugu.goutham.ahl.view.adapters.PointsTableAdapter
+import com.perugu.goutham.ahl.view.adapters.TopScorersAdapter
+import com.perugu.goutham.ahl.view_model.AHLDataState
+import com.perugu.goutham.ahl.view_model.AHLViewModel
+import com.perugu.goutham.ahl.view_model.UIDataState
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home_layout.*

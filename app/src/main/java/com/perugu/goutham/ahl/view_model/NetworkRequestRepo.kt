@@ -1,8 +1,12 @@
-package com.perugu.goutham.ahl
+package com.perugu.goutham.ahl.view_model
 
 import com.google.gson.Gson
 import com.jakewharton.rxrelay2.PublishRelay
 import com.orhanobut.logger.Logger
+import com.perugu.goutham.ahl.data.FixtureData
+import com.perugu.goutham.ahl.data.PointsTableData
+import com.perugu.goutham.ahl.data.TopScorersData
+import com.perugu.goutham.ahl.data.TournamentData
 import okhttp3.*
 import org.bson.types.ObjectId
 import java.io.IOException
@@ -35,11 +39,20 @@ class NetworkRequestRepo(
                     val tournamentData = gson.fromJson<TournamentData>(responseString, TournamentData::class.java)
                     Logger.wtf("TournamentId  ${tournamentData.id}")
 
-                    networkRequestStateStream.accept(Success(tournamentData))
+                    networkRequestStateStream.accept(
+                        Success(
+                            tournamentData
+                        )
+                    )
 
                 }else {
                     Logger.e("TournamentId response code ${response.code}}")
-                    networkRequestStateStream.accept(Failed(NetworkRequestAction.TOURNAMENT_ID, response.code))
+                    networkRequestStateStream.accept(
+                        Failed(
+                            NetworkRequestAction.TOURNAMENT_ID,
+                            response.code
+                        )
+                    )
                 }
 
             }
@@ -80,9 +93,19 @@ class NetworkRequestRepo(
         }else {
             Logger.e("Fixture data of ${category.value} fetch failed")
             if (category == Category.MEN){
-                networkRequestStateStream.accept(Failed(NetworkRequestAction.FIXTURE_FOR_MEN, response.code))
+                networkRequestStateStream.accept(
+                    Failed(
+                        NetworkRequestAction.FIXTURE_FOR_MEN,
+                        response.code
+                    )
+                )
             }else{
-                networkRequestStateStream.accept(Failed(NetworkRequestAction.FIXTURE_FOR_WOMEN, response.code))
+                networkRequestStateStream.accept(
+                    Failed(
+                        NetworkRequestAction.FIXTURE_FOR_WOMEN,
+                        response.code
+                    )
+                )
             }
         }
     }
@@ -113,14 +136,28 @@ class NetworkRequestRepo(
                 it.category = category
             }
 
-            networkRequestStateStream.accept(Success(pointsTableData))
+            networkRequestStateStream.accept(
+                Success(
+                    pointsTableData
+                )
+            )
 
         }else {
             Logger.e("PointsTable data of ${category.value} fetch failed")
             if (category == Category.MEN){
-                networkRequestStateStream.accept(Failed(NetworkRequestAction.POINTS_TABLE_FOR_MEN, response.code))
+                networkRequestStateStream.accept(
+                    Failed(
+                        NetworkRequestAction.POINTS_TABLE_FOR_MEN,
+                        response.code
+                    )
+                )
             }else{
-                networkRequestStateStream.accept(Failed(NetworkRequestAction.POINTS_TABLE_FOR_WOMEN, response.code))
+                networkRequestStateStream.accept(
+                    Failed(
+                        NetworkRequestAction.POINTS_TABLE_FOR_WOMEN,
+                        response.code
+                    )
+                )
             }
         }
     }
@@ -151,14 +188,28 @@ class NetworkRequestRepo(
                 it.category = category
             }
 
-            networkRequestStateStream.accept(Success(topScorersData))
+            networkRequestStateStream.accept(
+                Success(
+                    topScorersData
+                )
+            )
 
         }else {
             Logger.e("TopScorers data of ${category.value} fetch failed")
             if (category == Category.MEN){
-                networkRequestStateStream.accept(Failed(NetworkRequestAction.TOP_SCORER_FOR_MEN, response.code))
+                networkRequestStateStream.accept(
+                    Failed(
+                        NetworkRequestAction.TOP_SCORER_FOR_MEN,
+                        response.code
+                    )
+                )
             }else {
-                networkRequestStateStream.accept(Failed(NetworkRequestAction.TOP_SCORER_FOR_WOMEN, response.code))
+                networkRequestStateStream.accept(
+                    Failed(
+                        NetworkRequestAction.TOP_SCORER_FOR_WOMEN,
+                        response.code
+                    )
+                )
             }
         }
     }
