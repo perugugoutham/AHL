@@ -1,36 +1,20 @@
 package com.perugu.goutham.ahl.view_model
 
-import com.google.gson.Gson
 import com.jakewharton.rxrelay2.PublishRelay
 import com.orhanobut.logger.Logger
-import com.perugu.goutham.ahl.data.FixtureData
-import com.perugu.goutham.ahl.data.PointsTableData
-import com.perugu.goutham.ahl.data.TopScorersData
 import com.perugu.goutham.ahl.data.TournamentData
-import okhttp3.*
 import org.bson.types.ObjectId
-import java.io.IOException
 
 class NetworkRequestRepo(
-    private val okHttpClient: OkHttpClient,
-    val gson: Gson,
+    private val networkRequestService: NetworkRequestService,
     val networkRequestStateStream: PublishRelay<NetworkRequestState>
 ) {
 
-    private val baseUrl = "https://young-coast-02878.herokuapp.com/api"
-
     fun fetchTournamentId() {
         networkRequestStateStream.accept(Loading(NetworkRequestAction.TOURNAMENT_ID))
-        val url = "${baseUrl}/tournament?season=2020&type=AHL"
-
-        Logger.d("Tournament data fetch")
-
-        val requestBuilder = Request.Builder()
-        requestBuilder.url(url)
-        okHttpClient.newCall(requestBuilder.build()).enqueue(object : Callback{
-
-            override fun onFailure(call: Call, e: IOException) {
-                Logger.e("TournamentId fetch failed")
+        val call: retrofit2.Call<TournamentData> = networkRequestService.fetchTournamentDetails("2020", "AHL")
+        call.enqueue(object : retrofit2.Callback<TournamentData> {
+            override fun onFailure(call: retrofit2.Call<TournamentData>, t: Throwable) {
                 networkRequestStateStream.accept(
                     Failed(
                         NetworkRequestAction.TOURNAMENT_ID,
@@ -39,28 +23,24 @@ class NetworkRequestRepo(
                 )
             }
 
-            override fun onResponse(call: Call, response: Response) {
-                if (response.code == 200){
-                    val responseString = response.body?.string()
-                    val tournamentData = gson.fromJson<TournamentData>(responseString, TournamentData::class.java)
-                    Logger.wtf("TournamentId  ${tournamentData.id}")
-
+            override fun onResponse(
+                call: retrofit2.Call<TournamentData>,
+                response: retrofit2.Response<TournamentData>
+            ) {
+                if (response.code() == 200){
                     networkRequestStateStream.accept(
                         Success(
-                            tournamentData
+                            response.body()!!
                         )
                     )
-
                 }else {
-                    Logger.e("TournamentId response code ${response.code}}")
                     networkRequestStateStream.accept(
                         Failed(
                             NetworkRequestAction.TOURNAMENT_ID,
-                            response.code
+                            response.code()
                         )
                     )
                 }
-
             }
 
         })
@@ -79,37 +59,29 @@ class NetworkRequestRepo(
             networkRequestStateStream.accept(Loading(NetworkRequestAction.FIXTURE_FOR_WOMEN))
         }
 
-        val url = "$baseUrl/matches?category=${category.value}&tournament=$id"
-
-        val requestBuilder = Request.Builder()
-        requestBuilder.url(url)
-
-        val response = okHttpClient.newCall(requestBuilder.build()).execute()
+        val response = networkRequestService.fetchFixtureData(category = category.value, id = id).execute()
 
         if (response.isSuccessful){
-            val fixtureData = gson.fromJson<FixtureData>(response.body?.string(), FixtureData::class.java)
 
-            //Todo this is temp until changes are made in API
-            fixtureData.forEach {
+            response.body()!!.forEach {
                 it.category = category
             }
 
-            networkRequestStateStream.accept(Success(fixtureData))
-
+            networkRequestStateStream.accept(Success(response.body()!!))
         }else {
             Logger.e("Fixture data of ${category.value} fetch failed")
             if (category == Category.MEN){
                 networkRequestStateStream.accept(
                     Failed(
                         NetworkRequestAction.FIXTURE_FOR_MEN,
-                        response.code
+                        response.code()
                     )
                 )
             }else{
                 networkRequestStateStream.accept(
                     Failed(
                         NetworkRequestAction.FIXTURE_FOR_WOMEN,
-                        response.code
+                        response.code()
                     )
                 )
             }
@@ -120,7 +92,6 @@ class NetworkRequestRepo(
         id: ObjectId,
         category: Category
     ) {
-        val url = "$baseUrl/points?category=${category.value}&tournament=$id"
 
         Logger.d("PointsTable data fetch ${category.value}")
 
@@ -130,21 +101,17 @@ class NetworkRequestRepo(
             networkRequestStateStream.accept(Loading(NetworkRequestAction.POINTS_TABLE_FOR_WOMEN))
         }
 
-        val requestBuilder = Request.Builder()
-        requestBuilder.url(url)
-
-        val response = okHttpClient.newCall(requestBuilder.build()).execute()
+        val response = networkRequestService.fetchPointsTable(category = category.value, id = id).execute()
 
         if (response.isSuccessful){
-            val pointsTableData = gson.fromJson<PointsTableData>(response.body?.string(), PointsTableData::class.java)
 
-            pointsTableData.forEach {
+            response.body()!!.forEach {
                 it.category = category
             }
 
             networkRequestStateStream.accept(
                 Success(
-                    pointsTableData
+                    response.body()!!
                 )
             )
 
@@ -154,14 +121,14 @@ class NetworkRequestRepo(
                 networkRequestStateStream.accept(
                     Failed(
                         NetworkRequestAction.POINTS_TABLE_FOR_MEN,
-                        response.code
+                        response.code()
                     )
                 )
             }else{
                 networkRequestStateStream.accept(
                     Failed(
                         NetworkRequestAction.POINTS_TABLE_FOR_WOMEN,
-                        response.code
+                        response.code()
                     )
                 )
             }
@@ -172,7 +139,6 @@ class NetworkRequestRepo(
         id: ObjectId,
         category: Category
     ){
-        val url = "$baseUrl/topscorers/$id?category=${category.value}&count=3"
 
         Logger.d("TopScorers data fetch ${category.value}")
 
@@ -182,21 +148,21 @@ class NetworkRequestRepo(
             networkRequestStateStream.accept(Loading(NetworkRequestAction.TOP_SCORER_FOR_WOMEN))
         }
 
-        val requestBuilder = Request.Builder()
-        requestBuilder.url(url)
-
-        val response = okHttpClient.newCall(requestBuilder.build()).execute()
+        val response = networkRequestService.fetchTopScorers(
+            id = id,
+            category = category.value,
+            count = "3"
+        ).execute()
 
         if (response.isSuccessful){
-            val topScorersData = gson.fromJson<TopScorersData>(response.body?.string(), TopScorersData::class.java)
 
-            topScorersData.forEach {
+            response.body()!!.forEach {
                 it.category = category
             }
 
             networkRequestStateStream.accept(
                 Success(
-                    topScorersData
+                    response.body()!!
                 )
             )
 
@@ -206,14 +172,14 @@ class NetworkRequestRepo(
                 networkRequestStateStream.accept(
                     Failed(
                         NetworkRequestAction.TOP_SCORER_FOR_MEN,
-                        response.code
+                        response.code()
                     )
                 )
             }else {
                 networkRequestStateStream.accept(
                     Failed(
                         NetworkRequestAction.TOP_SCORER_FOR_WOMEN,
-                        response.code
+                        response.code()
                     )
                 )
             }

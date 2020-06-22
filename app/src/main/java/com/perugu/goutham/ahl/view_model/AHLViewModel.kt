@@ -2,15 +2,19 @@ package com.perugu.goutham.ahl.view_model
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import com.google.gson.Gson
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
-import com.perugu.goutham.ahl.data.*
+import com.perugu.goutham.ahl.data.FixtureData
+import com.perugu.goutham.ahl.data.PointsTableData
+import com.perugu.goutham.ahl.data.TopScorersData
+import com.perugu.goutham.ahl.data.TournamentData
 import com.readystatesoftware.chuck.ChuckInterceptor
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class AHLViewModel(application: Application): AndroidViewModel(application) {
 
@@ -20,10 +24,14 @@ class AHLViewModel(application: Application): AndroidViewModel(application) {
 
     private var disposable: Disposable? = null
 
+    private val retroFit: Retrofit = Retrofit.Builder().apply {
+        baseUrl("https://young-coast-02878.herokuapp.com")
+        client( OkHttpClient.Builder().addInterceptor(ChuckInterceptor(application)).build())
+        addConverterFactory(GsonConverterFactory.create())
+    }.build()
+
     private var networkRequestRepo = NetworkRequestRepo(
-        OkHttpClient.Builder().addInterceptor(ChuckInterceptor(application)).build(),
-        Gson(),
-        networkRequestStateStream
+        retroFit.create(NetworkRequestService::class.java), networkRequestStateStream
     )
 
     init {
@@ -36,7 +44,9 @@ class AHLViewModel(application: Application): AndroidViewModel(application) {
     }
 
     private fun subscribeToNetworkRequestState(){
-        disposable = networkRequestStateStream.subscribe {
+        disposable = networkRequestStateStream
+            .observeOn(io.reactivex.schedulers.Schedulers.io())
+            .subscribe {
             when (it) {
 
                 is Loading -> {

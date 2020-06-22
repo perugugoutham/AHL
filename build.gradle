@@ -12,6 +12,7 @@ buildscript {
         chuck = "1.1.0"
         rx_relay = "2.1.1"
         shimmer = "0.5.0"
+        retro_lib = "2.9.0"
         picasso = "2.71828"
     }
 
